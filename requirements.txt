@@ -1,0 +1,19 @@
+# Deep Learning & Scientific Computing
+tensorflow>=2.16.1
+numpy>=1.26.0,<2.0.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+matplotlib>=3.8.0
+pillow>=10.2.0
+
+# API Backend
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+python-multipart>=0.0.9
+pydantic>=2.6.0
+requests>=2.31.0
+
+# MLOps & Experiment Tracking
+mlflow>=2.11.0
+dvc>=3.48.0
+evidently>=0.4.15

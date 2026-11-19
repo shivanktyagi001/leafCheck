@@ -1,0 +1,38 @@
+data:
+  raw_dir: "dataset/raw"
+  processed_dir: "dataset"
+  train_dir: "dataset/train"
+  val_dir: "dataset/validation"
+  test_dir: "dataset/test"
+  train_split: 0.70
+  val_split: 0.15
+  test_split: 0.15
+  img_height: 224
+  img_width: 224
+  channels: 3
+  seed: 42
+
+model:
+  architecture: "MobileNetV2"
+  weights: "imagenet"
+  include_top: false
+  pooling: "avg"
+  dropout_rate: 0.3
+  num_classes: 10
+  model_dir: "models"
+  model_path: "models/leafcheck_model.keras"
+  classes_path: "models/classes.json"
+
+train:
+  batch_size: 32
+  initial_epochs: 10
+  initial_lr: 0.001
+  fine_tune_epochs: 5
+  fine_tune_lr: 0.00005
+  fine_tune_layers: 20
+  patience_early_stopping: 5
+  patience_reduce_lr: 2
+
+mlflow:
+  experiment_name: "LeafCheck_Tomato_Disease"
+  tracking_uri: "sqlite:///mlflow.db"

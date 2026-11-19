@@ -1,0 +1,36 @@
+stages:
+  prepare:
+    cmd: python src/data_setup.py
+    deps:
+      - src/data_setup.py
+    outs:
+      - dataset/train
+      - dataset/validation
+      - dataset/test
+
+  train:
+    cmd: python src/train.py
+    deps:
+      - src/train.py
+      - dataset/train
+      - dataset/validation
+    params:
+      - train.batch_size
+      - train.initial_epochs
+      - train.initial_lr
+      - train.fine_tune_epochs
+      - train.fine_tune_lr
+      - model.architecture
+    outs:
+      - models/leafcheck_model.keras
+      - models/classes.json
+
+  evaluate:
+    cmd: python src/evaluate.py
+    deps:
+      - src/evaluate.py
+      - models/leafcheck_model.keras
+      - dataset/test
+    outs:
+      - monitoring/classification_report.json
+      - monitoring/confusion_matrix.png

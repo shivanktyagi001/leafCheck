@@ -1,0 +1,44 @@
+# Virtual Environment
+.venv/
+env/
+venv/
+ENV/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# MLflow
+mlruns/
+mlartifacts/
+.mlflow/
+
+# DVC
+.dvc/cache
+.dvc/tmp
+
+# Datasets & Weights (Tracked via DVC / Git LFS)
+dataset/
+*.keras
+*.h5
+*.tflite
+*.onnx
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Operating System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment variables
+.env
+.env.local

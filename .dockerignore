@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+dataset/
+.git/
+.github/
+.dvc/
+mlruns/
+*.log
+tests/
+verify_setup.py
+requirements-dev.txt
