@@ -25,7 +25,6 @@ An end-to-end, production-grade Artificial Intelligence and MLOps system that de
 - [10. Automated Testing](#10-automated-testing)
 - [11. Model & Data Monitoring](#11-model--data-monitoring)
 - [12. Quick Start Guide](#12-quick-start-guide)
-- [13. Viva Preparation & Defense FAQ](#13-viva-preparation--defense-faq)
 
 ---
 
@@ -346,6 +345,24 @@ rather than continuing champion weights. The run is logged to the configured
 MLflow experiment as `candidate_retraining`, including the added batch location
 and combined training data locations.
 
+### Complete workflow and quality gate
+Run the complete labeled-batch workflow after the batch has been prepared:
+```powershell
+python src/run_workflow.py --batch-dir dataset/new_batch --quick
+```
+The workflow validates the batch, evaluates the champion, trains and evaluates
+an isolated candidate, then compares champion and candidate accuracy and
+weighted F1. It writes:
+
+- `monitoring/workflow/workflow_result.json` with the full execution result.
+- `monitoring/workflow/champion/classification_report.json` with the baseline evaluation.
+- `monitoring/workflow/candidate/classification_report.json` with the candidate evaluation.
+- `models/candidate/leafcheck_candidate.keras` and `models/candidate/classes.json` as candidate artifacts.
+
+The quality gate approves only when both candidate metrics meet the champion
+metrics (or the configured `--minimum-improvement` threshold). A rejected gate
+returns a non-zero exit status; the champion artifacts are never overwritten.
+
 ### Monitor production drift (Task D)
 Export reference and current inference records as CSV or JSON files with these
 columns: `predicted_class`, `confidence`, and `latency_ms`. Generate an
@@ -387,22 +404,4 @@ python src/evaluate.py
 # 6. Start FastAPI server
 uvicorn src.main:app --reload --port 8000
 ```
-
 ---
-
-## 13. Viva Preparation & Defense FAQ
-
-**Q1: Why did you choose MobileNetV2 instead of building a CNN from scratch?**
-> *Answer:* Training a deep CNN from scratch on a specialized dataset requires hundreds of thousands of images to generalize without severe overfitting. MobileNetV2 is pretrained on ImageNet (1.4M images), giving it pre-learned low- and mid-level feature detectors. Furthermore, MobileNetV2 uses depthwise separable convolutions, reducing parameters to ~3.5M and file size to ~14MB, making it ideal for low-cost, fast CPU deployment in agricultural settings.
-
-**Q2: What is the purpose of freezing layers during Transfer Learning?**
-> *Answer:* If we train all layers simultaneously with randomly initialized head weights, large backpropagated gradients will destroy the rich, pre-learned feature weights in the convolutional base. Freezing the base allows the classification head to learn task-specific mappings first. Once stabilized, we unfreeze the top layers for gentle fine-tuning at an ultra-low learning rate ($5 \times 10^{-5}$).
-
-**Q3: How do you prevent data leakage during dataset preparation?**
-> *Answer:* We perform stratified splitting (70% train, 15% validation, 15% test) *prior* to data augmentation. Augmentation is applied exclusively to the training stream. Additionally, duplicate images are identified and removed via MD5 hash comparison to ensure that identical or near-identical images never cross between splits.
-
-**Q4: Why is DVC needed when we already use Git?**
-> *Answer:* Git is optimized for tracking incremental textual changes in source code. Tracking large binary files (multi-gigabyte image datasets, serialized model weights) bloats Git repositories, degrades performance, and hits storage thresholds. DVC tracks data using lightweight hash pointers committed to Git while storing the actual large files in decoupled local or cloud object stores.
-
-**Q5: How does the system handle real-world image degradation?**
-> *Answer:* We apply on-the-fly data augmentation during training (random flips, rotations, and zooms) to simulate natural variations. At inference time, images are validated for integrity, resized via Lanczos resampling, normalized identically to training, and evaluated using top-3 rankings so uncertain classifications are surfaced rather than masked.
