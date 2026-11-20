@@ -363,6 +363,21 @@ The quality gate approves only when both candidate metrics meet the champion
 metrics (or the configured `--minimum-improvement` threshold). A rejected gate
 returns a non-zero exit status; the champion artifacts are never overwritten.
 
+### Monitor production drift (Task D)
+Export reference and current inference records as CSV or JSON files with these
+columns: `predicted_class`, `confidence`, and `latency_ms`. Generate an
+Evidently HTML report and a machine-readable summary:
+```powershell
+python monitoring/monitor.py `
+  --reference-data monitoring/reference_predictions.csv `
+  --current-data monitoring/current_predictions.csv
+```
+The report is written to `monitoring/drift_report.html` and the summary to
+`monitoring/drift_summary.json`. Both datasets are required when supplying
+input paths; running without arguments uses a deterministic demo dataset for
+local smoke testing. Invalid paths, missing columns, empty datasets, and
+out-of-range confidence values fail explicitly.
+
 ---
 
 ## 12. Quick Start Guide
