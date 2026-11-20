@@ -291,6 +291,27 @@ Outputs an interactive report at `monitoring/drift_report.html` evaluating:
 - **Confidence Drift:** Degradation in mean model certainty.
 - **Latency Drift:** Inference response time anomalies.
 
+### Prepare a new labeled image batch (Task A)
+Place incoming images under `dataset/new_batch/`, with one folder per target class
+using the class names in `models/classes.json`:
+```text
+dataset/new_batch/
+├── Tomato___Early_blight/
+│   └── new_leaf_001.jpg
+└── Tomato___healthy/
+    └── new_leaf_002.jpg
+```
+Validate the labels and image files, check duplicates by image content, and create
+a size and class-distribution report:
+```powershell
+python src/prepare_new_data.py
+```
+The command prints the report and saves it to
+`monitoring/new_batch_data_report.json`. Use `--batch-dir`, `--classes-file`, and
+`--report-path` to override the defaults. Invalid or unlabeled files are listed
+in the report and cause a non-zero exit status; duplicate copies are reported
+and excluded from the unique-image class counts.
+
 ---
 
 ## 12. Quick Start Guide
