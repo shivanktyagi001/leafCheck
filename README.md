@@ -328,6 +328,24 @@ batch, while accuracy gives an overall correctness measure. Pass `--model-path`,
 different inputs or artifact locations. Without arguments, the existing
 `dataset/test` evaluation used by DVC remains the default.
 
+### Retrain a separate candidate with the labeled batch (Task C)
+After validating and evaluating the batch, train a fresh candidate using both
+`dataset/train/` and `dataset/new_batch/`. The existing validation split is still
+used to monitor training:
+```powershell
+python src/train.py --new-data-dir dataset/new_batch
+```
+The candidate model and matching class mapping are saved separately at
+`models/candidate/leafcheck_candidate.keras` and `models/candidate/classes.json`.
+The existing champion at `models/leafcheck_model.keras` is not replaced. Use
+`--candidate-model-path` and `--candidate-classes-path` to choose different
+candidate output paths; paths resolving to the champion artifacts are rejected.
+This uses the same MobileNetV2 preprocessing, augmentation, and two-stage
+training pipeline as the existing training command, starting a fresh model
+rather than continuing champion weights. The run is logged to the configured
+MLflow experiment as `candidate_retraining`, including the added batch location
+and combined training data locations.
+
 ---
 
 ## 12. Quick Start Guide
