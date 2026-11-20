@@ -1,4 +1,4 @@
-# LeafCheck – Crop Disease Detection Using Deep Learning and MLOps
+# LeafCheck–CropDisease Detection Using Deep Learning and MLOps
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.16%2B-orange.svg)](https://tensorflow.org/)
