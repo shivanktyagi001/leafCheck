@@ -312,6 +312,22 @@ The command prints the report and saves it to
 in the report and cause a non-zero exit status; duplicate copies are reported
 and excluded from the unique-image class counts.
 
+### Evaluate the existing model on a labeled batch (Task B)
+Run evaluation against the new batch after placing its labeled images in
+`dataset/new_batch/`:
+```powershell
+python src/evaluate.py --data-dir dataset/new_batch --output-dir monitoring/new_batch
+```
+The saved model in `models/leafcheck_model.keras` is evaluated without retraining.
+The JSON report at `monitoring/new_batch/classification_report.json` records the
+evaluated dataset and sample count, overall accuracy, weighted precision, recall
+and F1-score, plus per-class metrics. The confusion matrix is saved beside it.
+Weighted precision, recall and F1 account for class imbalance in the labeled
+batch, while accuracy gives an overall correctness measure. Pass `--model-path`,
+`--classes-file`, `--data-dir`, `--output-dir`, or `--report-path` to use
+different inputs or artifact locations. Without arguments, the existing
+`dataset/test` evaluation used by DVC remains the default.
+
 ---
 
 ## 12. Quick Start Guide
